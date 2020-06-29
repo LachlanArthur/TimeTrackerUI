@@ -1,6 +1,6 @@
 import { Component, h, Prop, Host } from '@stencil/core';
-import { TimeTrackerCsvGroup, TimeTrackerCsvItem } from '../../classes/time-tracker-item';
-import { formatDuration } from '../../utils/format';
+import { TimeTrackerCsvGroup } from '../../classes/time-tracker-item';
+import { formatDuration, duration } from '../../utils/duration';
 
 
 @Component( {
@@ -13,10 +13,6 @@ export class TtTimelineItem {
 	@Prop() start: Date;
 
 	@Prop() item: TimeTrackerCsvGroup;
-
-	duration( item: TimeTrackerCsvItem ) {
-		return ( item.to.valueOf() - item.from.valueOf() ) / 1000;
-	}
 
 	render() {
 		return (
@@ -31,10 +27,10 @@ export class TtTimelineItem {
 					<div class="title">
 						{this.item.name}<br />
 						{this.item.path}<br />
-						{formatDuration( this.item.items.reduce( ( total, item ) => { return total + this.duration( item ) }, 0 ) )}
+						{formatDuration( this.item.total )}
 					</div>
 					{this.item.items.map( item => {
-						if ( this.duration( item ) > 1 ) {
+						if ( duration( item ) > 1 ) {
 							return <div
 								style={{
 									position: 'absolute',
@@ -44,7 +40,7 @@ export class TtTimelineItem {
 									background: 'black',
 									height: '100%',
 								}}
-								title={`${item.name}\nfrom ${item.from.toLocaleTimeString()} to ${item.to.toLocaleTimeString()}\n${formatDuration( this.duration( item ) )}`}
+								title={`${item.name}\nfrom ${item.from.toLocaleTimeString()} to ${item.to.toLocaleTimeString()}\n${formatDuration( duration( item ) )}`}
 							></div>
 							// <tt-timeline-interval interval={item}></tt-timeline-interval>
 						}

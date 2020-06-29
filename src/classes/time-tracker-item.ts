@@ -10,6 +10,7 @@ export type TimeTrackerCsvGroup = {
 	path: string
 	name: string
 	items: TimeTrackerCsvItem[]
+	total: number
 }
 
 export class TimeTrackerItem {

@@ -1,3 +1,12 @@
+import { TimeTrackerCsvItem } from '../classes/time-tracker-item';
+
+export function duration( item: TimeTrackerCsvItem ) {
+	if ( item.to && item.from ) {
+		return ( item.to.valueOf() - item.from.valueOf() ) / 1000;
+	}
+	return 0;
+}
+
 export function formatDuration( seconds: number ) {
 
 	let minutes = Math.floor( seconds / 60 );
