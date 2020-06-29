@@ -1,6 +1,7 @@
 import { Component, h, Host, State } from '@stencil/core';
 import { parser } from '../../utils/csv';
 import { TimeTrackerCsvItem } from '../../classes/time-tracker-item';
+import { canonicalName } from '../../utils/applications';
 
 
 @Component( {
@@ -13,11 +14,6 @@ export class TtApp {
 	@State()
 	protected data: TimeTrackerCsvItem[] = [];
 
-	canonicalName( name: string ): string {
-		if ( !name ) return name;
-		return name.replace( /[●]/, '' ).trim();
-	}
-
 	async loadFile( file: File ) {
 		if ( !file ) return;
 		const response = await fetch( URL.createObjectURL( file ) );
@@ -25,7 +21,9 @@ export class TtApp {
 		this.data = parser( csv ).map( line => {
 			const [ fromString, status, path, name ] = line;
 			const from = new Date( fromString );
-			return { from, to: null, status, path, name: this.canonicalName( name ) } as TimeTrackerCsvItem;
+			const item = { from, to: null, status, path, name } as TimeTrackerCsvItem;
+			item.name = canonicalName( item );
+			return item;
 		} ).reduceRight( ( items, item, index, originalItems ) => {
 			if ( index < originalItems.length - 1 ) {
 				item.to = originalItems[ index + 1 ].from || null;
