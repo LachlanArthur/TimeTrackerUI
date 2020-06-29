@@ -13,8 +13,9 @@ export class TtApp {
 	@State()
 	protected data: TimeTrackerCsvItem[] = [];
 
-	async loadData() {
-		const response = await fetch( '/assets/2019-08-13.csv' );
+	async loadFile( file: File ) {
+		if ( !file ) return;
+		const response = await fetch( URL.createObjectURL( file ) );
 		const csv = await response.text();
 		this.data = parser( csv ).map( line => {
 			const [ fromString, status, path, name ] = line;
@@ -29,16 +30,14 @@ export class TtApp {
 		}, [] as TimeTrackerCsvItem[] );
 	}
 
-	componentWillLoad() {
-		this.loadData();
-	}
-
 	render() {
 		return (
 			<Host>
 				<header>
 					<h1>Time Tracker UI</h1>
 				</header>
+
+				<input type="file" onChange={e => this.loadFile( ( e.target as HTMLInputElement ).files.item( 0 ) )} />
 
 				<tt-timeline-list items={this.data}></tt-timeline-list>
 			</Host>
