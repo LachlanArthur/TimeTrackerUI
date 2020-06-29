@@ -21,10 +21,18 @@ export class TtTimelineItem {
 	render() {
 		return (
 			<Host>
-				<div style={{
-					position: 'relative',
-					height: '10px',
-				}}>
+				<div
+					class="group"
+					style={{
+						position: 'relative',
+						height: '5px',
+					}}
+				>
+					<div class="title">
+						{this.item.name}<br />
+						{this.item.path}<br />
+						{formatDuration( this.item.items.reduce( ( total, item ) => { return total + this.duration( item ) }, 0 ) )}
+					</div>
 					{this.item.items.map( item => {
 						if ( this.duration( item ) > 1 ) {
 							return <div
@@ -34,7 +42,7 @@ export class TtTimelineItem {
 									left: `calc(${item.from.valueOf() - this.start.valueOf()}px * var(--scale, 1))`,
 									width: `calc(${item.to.valueOf() - item.from.valueOf()}px * var(--scale, 1))`,
 									background: 'black',
-									height: '10px',
+									height: '100%',
 								}}
 								title={`${item.name}\nfrom ${item.from.toLocaleTimeString()} to ${item.to.toLocaleTimeString()}\n${formatDuration( this.duration( item ) )}`}
 							></div>

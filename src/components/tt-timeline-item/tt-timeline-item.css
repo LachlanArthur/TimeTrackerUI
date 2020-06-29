@@ -1,3 +1,16 @@
 :host {
 	display: block;
 }
+
+.group:hover {
+	background-color: lightcyan;
+}
+
+.title {
+	visibility: hidden;
+	height: 100%;
+}
+
+.group:hover .title {
+	visibility: visible;
+}
