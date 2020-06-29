@@ -13,6 +13,11 @@ export class TtApp {
 	@State()
 	protected data: TimeTrackerCsvItem[] = [];
 
+	canonicalName( name: string ): string {
+		if ( !name ) return name;
+		return name.replace( /[●]/, '' ).trim();
+	}
+
 	async loadFile( file: File ) {
 		if ( !file ) return;
 		const response = await fetch( URL.createObjectURL( file ) );
@@ -20,7 +25,7 @@ export class TtApp {
 		this.data = parser( csv ).map( line => {
 			const [ fromString, status, path, name ] = line;
 			const from = new Date( fromString );
-			return { from, to: null, status, path, name } as TimeTrackerCsvItem;
+			return { from, to: null, status, path, name: this.canonicalName( name ) } as TimeTrackerCsvItem;
 		} ).reduceRight( ( items, item, index, originalItems ) => {
 			if ( index < originalItems.length - 1 ) {
 				item.to = originalItems[ index + 1 ].from || null;
